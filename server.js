@@ -10,16 +10,34 @@ const storageReservoirs = require('./routes/storageReservoirs');
 const treatment = require('./routes/treatment');
 const distributionSystem = require('./routes/distributionSystem');
 const ratesFinances = require('./routes/ratesFinances');
+const algorithm = require('./routes/algorithm');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
+const passport = require('passport');
 
 // finish below
 // import login from './routes/something/login';
 const app = express();
 
 if (process.env.NODE_ENV !== 'production') {
-  dotenv.config();
+  require('dotenv').config();
+}
+
+const config = {
+  appRoot: __dirname // required config
+};
+
+switch (app.get('env')) {
+  case 'development':
+    app.use(morgan('dev'));
+    break;
+
+  case 'production':
+    app.use(morgan('short'));
+    break;
+
+  default:
 }
 
 // CORS
@@ -29,9 +47,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(morgan('combined'));
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(passport.initialize());
 
 app.use(users);
 app.use(sources);
@@ -40,6 +58,7 @@ app.use(storageReservoirs);
 app.use(treatment);
 app.use(distributionSystem);
 app.use(ratesFinances);
+app.use(algorithm);
 
 app.use((_req, res) => {
   res.sendStatus(404);
