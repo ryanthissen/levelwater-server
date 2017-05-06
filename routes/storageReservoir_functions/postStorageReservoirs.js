@@ -1,30 +1,36 @@
 const knex = require('../../knex');
 
+/**
+* POST function to make request to Storage Reservoir table. Posts JSON object with water_systems_id, reservoir_type, reservoir_name, year_constructed, capacity, condition, and critical_to_operations.
+* @module postStorageReservoirs
+* @name postStorageReservoirs
+* @route {POST} /storage-reservoirs
+*/
 const postStorageReservoirs = (req, res) => {
   const { water_systems_id, reservoir_type, reservoir_name, year_constructed, capacity, condition, critical_to_operations } = req.body
   const reservoir = { water_systems_id, reservoir_type, reservoir_name, year_constructed, capacity, condition, critical_to_operations };
 
   const currentdate = new Date();
   if (typeof water_systems_id !== 'number') {
-    return res.status(400).send('Water systems id must not be blank');
+    return res.send({ status: 400, ErrorMessage: 'Water systems id must not be blank' });
   }
   if (!reservoir_name || !reservoir_name.trim()) {
-    return res.status(400).send('Reservoir name name must not be blank');
+    return res.send({ status: 400, ErrorMessage: 'Reservoir name must not be blank' });
   }
   if (reservoir_type !== 'concrete' && reservoir_type !== 'steel' && reservoir_type !==  'redwood' && reservoir_type !==  'plastic') {
-    return res.status(400).send('Reservoir type must not be blank');
+    return res.send({ status: 400, ErrorMessage: 'Reservoir type must be valid' });
   }
   if (typeof year_constructed !== 'number' || (year_constructed > currentdate.getFullYear())) {
-    return res.status(400).send('Year constructed must not be blank and must be a valid year');
+    return res.send({ status: 400, ErrorMessage: 'Year constructed must not be blank and must be a valid year' });
   }
-  if (typeof capacity !== 'number') {
-    return res.status(400).send('Capacity must not be blank');
+  if (typeof capacity !== 'number' || capacity < 0) {
+    return res.send({ status: 400, ErrorMessage: 'Capacity must not be blank and must not be negative' });
   }
   if (condition !== 'great' && condition !== 'fair' && condition !== 'poor') {
-    return res.status(400).send('Condition must not be blank and must be great, fair, or poor');
+    return res.send({ status: 400, ErrorMessage: 'Condition must not be blank and must be great, fair, or poor' });
   }
   if (critical_to_operations !== 'true' && critical_to_operations !== 'false') {
-    return res.status(400).send('Critical to Operations status must be either true or false');
+    return res.send({ status: 400, ErrorMessage: 'Critical to Operations status must be either true or false' });
   }
 
   knex('users')

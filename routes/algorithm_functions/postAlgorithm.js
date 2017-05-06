@@ -1,15 +1,21 @@
 const knex = require('../../knex');
 const startAlgorithm = require('../../water-math/app.js');
 
-
-const sourceObjectArray = [];
-const treatmentObjectArray = [];
-const storageObjectArray = [];
-const distributionObjectArray = [];
-const ratesFinancesObjectArray = [];
-const algorithmResultsObject = {};
+/**
+* POST function to make request to post to the Algorithm Results table
+* @module postAlgorithm
+* @name postAlgorithm
+* @route {POST} /algorithm-results
+* @routeparam {Number} water_systems_id - The id for the water system.
+*/
 
 const getInfoFromTables = (req, res) => {
+  const sourceObjectArray = [];
+  const treatmentObjectArray = [];
+  const storageObjectArray = [];
+  const distributionObjectArray = [];
+  const ratesFinancesObjectArray = [];
+  const algorithmResultsObject = {};
   knex('users')
   .where('id', req.claim.userId)
   .select('water_systems_id')

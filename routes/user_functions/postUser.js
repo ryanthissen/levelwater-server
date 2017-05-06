@@ -3,6 +3,12 @@ const Joi = require('joi');
 const bcrypt = require('bcrypt-as-promised');
 const jwt = require('jsonwebtoken');
 
+/**
+* POST function to make request to Users table. Posts JSON object with water_systems_id, first_name, last_name, email, hashed_password, and superuser.
+* @module postsUser
+* @name postsUser
+* @route {POST} /users
+*/
 const postUsers = (req, res) => {
   const { email, password } = req.body;
 
@@ -26,9 +32,8 @@ const postUsers = (req, res) => {
       return bcrypt.hash(password, 12);
     })
     .then((hashed_password) => {
-      const { water_systems_id, first_name, last_name, superuser } = req.body;
+      const { first_name, last_name, superuser } = req.body;
       const newUser = {
-        water_systems_id,
         first_name,
         last_name,
         email,

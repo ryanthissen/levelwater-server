@@ -25,7 +25,7 @@ afterEach((done) => {
 describe('GET /water-systems/:id', () => {
   let token;
 
-  it('creates a token', (done) => {
+  it('requires a token', (done) => {
     request
     .post('/login')
     .send({
@@ -33,8 +33,8 @@ describe('GET /water-systems/:id', () => {
       password: 'something',
     })
     .end((err, res) => {
-      expect(res.body.user.token);
-      token = res.body.user.token;
+      expect(res.body.token);
+      token = res.body.token;
     });
     done();
   });
@@ -46,7 +46,7 @@ describe('GET /water-systems/:id', () => {
     .expect('Content-Type', /json/)
     .expect(200, {
       id: 1,
-      pws_name: 'Drunk with power',
+      pws_name: 'West Bay Mud',
       pws_id: 1234567,
       population: 1000,
       connections: 444,
